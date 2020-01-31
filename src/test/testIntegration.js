@@ -17,29 +17,53 @@ chai.use(chaiAsPromised);
 
 const pathBooks = path.join(__dirname, '../data/books.json');
 
-beforeEach(() => {
-    resetDatabase(pathBooks, books.initialStructure)
-});
 
+describe("Test Intégration sur base de données vide", () => {
+    
+    beforeEach(() => {
+        resetDatabase(pathBooks, books.initialStructure)
+        nock.cleanAll()
+    });
 
-
-
-describe("gcyegyu",()=>{
     it('Get is not null',  (done) =>{
-        server.po
         chai.request('http://localhost:8080')
             .get('/book')
             .end(function (err, res) {
+                expect(res).to.be.a("object");
     
-                // chek status 
-                expect(res).to.have.status(200)
+                done();
+            })
+    })
+
+    it('response is 200',  (done) =>{
+        chai.request('http://localhost:8080')
+            .get('/book')
+            .end(function (err, res) {
+            
+                expect(res).to.have.status(200)    
+                done();
+            })
+    })
+
+    it('books is an array',  (done) =>{
+        chai.request('http://localhost:8080')
+            .get('/book')
+            .end(function (err, res) {
+                expect(res).to.not.be.null;
     
-                // test if books is an array
                 var parsedData = JSON.parse(res.text)
                 expect(parsedData.books).to.be.a("array")
     
-                //check that array is empty
-                chai.expect((parsedData.books).length).to.equal(0)
+                done();
+            })
+    })
+
+    it('books array is empty',  (done) =>{
+        chai.request('http://localhost:8080')
+            .get('/book')
+            .end(function (err, res) {
+                var parsedData = JSON.parse(res.text)
+                expect((parsedData.books).length).to.equal(0)
     
                 done();
             })
@@ -47,6 +71,20 @@ describe("gcyegyu",()=>{
 });
 
 
-// afterEach(() => {
-//     resetDatabase(pathBooks, books.initialStructureOneBook)
-// });
+
+describe("Test d'intégration sur base de données avec 1 livre", () => {
+    beforeEach(() => {
+        resetDatabase(pathBooks, books.initialStructureOneBook)
+        nock.cleanAll()
+    });
+
+    it('Get is not null',  (done) =>{
+        chai.request('http://localhost:8080')
+            .get('/book')
+            .end(function (err, res) {
+                expect(res).to.be.a("object");
+    
+                done();
+            })
+    })
+});
