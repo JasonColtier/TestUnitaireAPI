@@ -87,4 +87,22 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
                 done();
             })
     })
+
+
+    it('response is 200',  (done) =>{
+        chai.request('http://localhost:8080')
+        .put('/book/1')
+        .send({
+            title: "Oui-Oui contre Elizabeth II",
+            years: 1990,
+            pages: 400
+        })
+        .end(function (err, res) {
+            //assert that the mocked response is returned
+            expect(res.statusCode).to.equal(200);
+            expect(res.body.message).to.equal("book successfully updated");
+            done();
+        });
+    })
+    
 });
