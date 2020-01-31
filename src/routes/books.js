@@ -91,8 +91,6 @@ const getBook = (req, res) => {
       if (!book) {
         return res.status(400).send({ message: 'book does not exist' });
       }
-      console.log(req.params.id);
-      console.log(book);
       res.status(200).send({ message: 'book fetched', book });
     }
   });

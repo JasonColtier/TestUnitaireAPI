@@ -49,11 +49,8 @@ describe("Test Intégration sur base de données vide", () => {
         it('books is an array',  (done) =>{
             chai.request('http://localhost:8080')
                 .get('/book')
-                .end(function (err, res) {
-                    expect(res).to.not.be.null;
-        
-                    var parsedData = JSON.parse(res.text)
-                    expect(parsedData.books).to.be.a("array")
+                .end(function (err, res) {        
+                    expect(res.body.books).to.be.a("array")
         
                     done();
                 })
@@ -63,8 +60,7 @@ describe("Test Intégration sur base de données vide", () => {
             chai.request('http://localhost:8080')
                 .get('/book')
                 .end(function (err, res) {
-                    var parsedData = JSON.parse(res.text)
-                    expect((parsedData.books).length).to.equal(0)
+                    expect((res.body.books).length).to.equal(0)
         
                     done();
                 })
@@ -138,6 +134,19 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
                 expect(res.body.message).to.equal("book successfully updated");
                 done();
               });
+    })
+
+    it('books is an array',  (done) =>{
+        chai.request('http://localhost:8080')
+            .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+            .end(function (err, res) {
+    
+                //var parsedData = res
+                console.log(res.body.book);
+                expect(res.body.book.title).to.be.a("string")
+    
+                done();
+            })
     })
     
 });
