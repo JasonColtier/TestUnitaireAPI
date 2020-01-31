@@ -15,6 +15,11 @@ chai.use(chaiAsPromised);
 // tout les packages et fonction nescessaire au test sont importé ici, bon courage
 
 // PREMIERE SERIE DE TEST UNITAIRE - SIMU DE REPONSE OK 
+
+describe("Test Unitaire sucessfull",()=>{
+  beforeEach(() => {
+      nock.cleanAll()
+  });
 //GET
 it('requestGET', function(done) {
     const requestNock = nock('http://localhost:8080')
@@ -96,3 +101,4 @@ it('requestDELETE', function(done) {
         done();
       });
 });
+})
