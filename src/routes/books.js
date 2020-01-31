@@ -8,18 +8,18 @@ import initIfFileIfMissing from '../utils/initIfFileMissing';
 
 const getBooks = (req, res) => {
   // Pour activer cette route, commenter cette ligne et decommenté le reste
-  res.status(200).send({ message: 'route non activé' });
+  // res.status(200).send({ message: 'route non activé' });
 
-  // const pathBooks = path.join(__dirname, '../data/books.json');
-  // fs.readFile(pathBooks, 'utf8', (err, data) => {
-  //   if (err) {
-  //     console.log(err);
-  //     res.status(400).send({ message: 'error fetching books' });
-  //   } else {
-  //     console.log(data);
-  //     res.status(200).send(JSON.parse(data));
-  //   }
-  // });
+  const pathBooks = path.join(__dirname, '../data/books.json');
+  fs.readFile(pathBooks, 'utf8', (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send({ message: 'error fetching books' });
+    } else {
+      console.log(data);
+      res.status(200).send(JSON.parse(data));
+    }
+  });
 };
 
 /*
@@ -28,6 +28,10 @@ const getBooks = (req, res) => {
 
 const initialStructure = {
   books: []
+};
+
+const initialStructureOneBook = {
+  books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
 };
 
 const postBook = (req, res) => {
@@ -172,4 +176,4 @@ const updateBook = (req, res) => {
 };
 
 //export all the functions
-export default { getBooks, postBook, getBook, deleteBook, updateBook };
+export default { initialStructure,initialStructureOneBook, getBooks, postBook, getBook, deleteBook, updateBook };

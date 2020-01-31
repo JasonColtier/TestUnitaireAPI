@@ -13,4 +13,7 @@ const resetDatabase = (path, initialStructure) => {
   });
 };
 
+
+
+
 export default resetDatabase;

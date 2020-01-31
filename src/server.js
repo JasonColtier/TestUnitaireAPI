@@ -37,3 +37,5 @@ app.listen(port);
 console.log('Listening on port ' + port);
 
 module.exports = app; // for testing
+
+export default app;

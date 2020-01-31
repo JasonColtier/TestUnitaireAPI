@@ -34,13 +34,13 @@ it('get unsuccessful', function(done) {
 
 it('get with id unsuccessful', function(done) {
     const requestNock = nock('http://localhost:8080')
-      .get('/book/:0')
+      .get('/book/0')
       .reply(400, {
           'message' : 'error fetching books'
         });
 
       chai.request('http://localhost:8080')
-      .get('/book/:0')
+      .get('/book/0')
       .end(function (err, res) {
         //assert that the mocked response is returned
         expect(res.statusCode).to.equal(400);
@@ -75,12 +75,12 @@ it('post unsuccessful', function(done) {
 
 it('put unsuccessful', function(done) {
     const requestNock = nock('http://localhost:8080')
-      .put('/book/:0')
+      .put('/book/0')
       .reply(400, {
         'message' : 'error updating the book'
       });
       chai.request('http://localhost:8080')
-      .put('/book')
+      .put('/book/0')
       .send({
         title: 'Coco raconte Channel 2',
         years: 1990,
@@ -97,12 +97,12 @@ it('put unsuccessful', function(done) {
 
 it('delete unsuccessful', function(done) {
     const requestNock = nock('http://localhost:8080')
-      .delete('/book/:0')
+      .delete('/book/0')
       .reply(400, {
         'message' : 'error deleting books'
       });
       chai.request('http://localhost:8080')
-      .delete('/book')
+      .delete('/book/0')
       .end(function (err, res) {
         //assert that the mocked response is returned
         expect(res.statusCode).to.equal(400);
