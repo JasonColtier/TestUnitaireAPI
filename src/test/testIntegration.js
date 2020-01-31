@@ -25,49 +25,80 @@ describe("Test Intégration sur base de données vide", () => {
         nock.cleanAll()
     });
 
-    it('Get is not null',  (done) =>{
-        chai.request('http://localhost:8080')
-            .get('/book')
-            .end(function (err, res) {
-                expect(res).to.be.a("object");
+    describe("Requete GET", () => {
+        it('Get is not null',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book')
+                .end(function (err, res) {
+                    expect(res).to.be.a("object");
+        
+                    done();
+                })
+        })
     
-                done();
-            })
-    })
-
-    it('response is 200',  (done) =>{
-        chai.request('http://localhost:8080')
-            .get('/book')
-            .end(function (err, res) {
-            
-                expect(res).to.have.status(200)    
-                done();
-            })
-    })
-
-    it('books is an array',  (done) =>{
-        chai.request('http://localhost:8080')
-            .get('/book')
-            .end(function (err, res) {
-                expect(res).to.not.be.null;
+        it('response is 200',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book')
+                .end(function (err, res) {
+                
+                    expect(res).to.have.status(200)    
+                    done();
+                })
+        })
     
-                var parsedData = JSON.parse(res.text)
-                expect(parsedData.books).to.be.a("array")
+        it('books is an array',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book')
+                .end(function (err, res) {
+                    expect(res).to.not.be.null;
+        
+                    var parsedData = JSON.parse(res.text)
+                    expect(parsedData.books).to.be.a("array")
+        
+                    done();
+                })
+        })
     
-                done();
-            })
-    })
-
-    it('books array is empty',  (done) =>{
-        chai.request('http://localhost:8080')
-            .get('/book')
-            .end(function (err, res) {
-                var parsedData = JSON.parse(res.text)
-                expect((parsedData.books).length).to.equal(0)
-    
-                done();
-            })
-    })
+        it('books array is empty',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book')
+                .end(function (err, res) {
+                    var parsedData = JSON.parse(res.text)
+                    expect((parsedData.books).length).to.equal(0)
+        
+                    done();
+                })
+        })
+    });
+    describe("Requete POST", () => {
+        it('answer is 200',  (done) =>{
+            chai.request('http://localhost:8080')
+                .post('/book')
+                .send({
+                    title: "Oui-Oui contre Elizabeth II",
+                    years: 1990,
+                    pages: 400
+                  })
+                  .end(function (err, res) {
+                    //assert that the mocked response is returned
+                    expect(res.statusCode).to.equal(200);
+                    done();
+                  });
+        })
+        it("message contains : book successfully added",  (done) =>{
+            chai.request('http://localhost:8080')
+                .post('/book')
+                .send({
+                    title: "Oui-Oui contre Elizabeth II",
+                    years: 1990,
+                    pages: 400
+                  })
+                  .end(function (err, res) {
+                    expect(res.body.message).to.equal("book successfully added");
+                    done();
+                  });
+        })
+    });
 });
 
 
@@ -78,31 +109,35 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
         nock.cleanAll()
     });
 
-    it('Get is not null',  (done) =>{
-        chai.request('http://localhost:8080')
-            .get('/book')
-            .end(function (err, res) {
-                expect(res).to.be.a("object");
-    
-                done();
-            })
-    })
-
-
     it('response is 200',  (done) =>{
         chai.request('http://localhost:8080')
-        .put('/book/1')
+        .put('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
         .send({
-            title: "Oui-Oui contre Elizabeth II",
+            title: "Coco raconte Channel 2",
             years: 1990,
             pages: 400
         })
         .end(function (err, res) {
             //assert that the mocked response is returned
+            console.log("error res : "+res.text)
             expect(res.statusCode).to.equal(200);
             expect(res.body.message).to.equal("book successfully updated");
             done();
         });
+    })
+
+    it("message contains : book successfully added",  (done) =>{
+        chai.request('http://localhost:8080')
+            .put('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+            .send({
+                title: "Coco raconte Channel 2",
+                years: 1990,
+                pages: 400
+              })
+              .end(function (err, res) {
+                expect(res.body.message).to.equal("book successfully updated");
+                done();
+              });
     })
     
 });
