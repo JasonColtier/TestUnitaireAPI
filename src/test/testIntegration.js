@@ -105,48 +105,199 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
         nock.cleanAll()
     });
 
-    it('response is 200',  (done) =>{
-        chai.request('http://localhost:8080')
-        .put('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-        .send({
-            title: "Coco raconte Channel 2",
-            years: 1990,
-            pages: 400
-        })
-        .end(function (err, res) {
-            //assert that the mocked response is returned
-            console.log("error res : "+res.text)
-            expect(res.statusCode).to.equal(200);
-            expect(res.body.message).to.equal("book successfully updated");
-            done();
-        });
-    })
-
-    it("message contains : book successfully added",  (done) =>{
-        chai.request('http://localhost:8080')
+    describe("Requete PUT", () => {
+        it('response is 200',  (done) =>{
+            chai.request('http://localhost:8080')
             .put('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
             .send({
                 title: "Coco raconte Channel 2",
                 years: 1990,
                 pages: 400
-              })
-              .end(function (err, res) {
-                expect(res.body.message).to.equal("book successfully updated");
-                done();
-              });
-    })
-
-    it('books is an array',  (done) =>{
-        chai.request('http://localhost:8080')
-            .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-            .end(function (err, res) {
-    
-                //var parsedData = res
-                console.log(res.body.book);
-                expect(res.body.book.title).to.be.a("string")
-    
-                done();
             })
-    })
+            .end(function (err, res) {
+                //assert that the mocked response is returned
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        })
     
+        it("message contains : book successfully updated",  (done) =>{
+            chai.request('http://localhost:8080')
+                .put('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .send({
+                    title: "Coco raconte Channel 2",
+                    years: 1990,
+                    pages: 400
+                  })
+                  .end(function (err, res) {
+                    expect(res.body.message).to.equal("book successfully updated");
+                    done();
+                  });
+        })    
+    });
+
+    describe("Requete DELETE", () => {
+        it('response is 200',  (done) =>{
+            chai.request('http://localhost:8080')
+          .delete('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+          .end(function (err, res) 
+          {
+            //assert that the mocked response is returned
+            expect(res.statusCode).to.equal(200);
+            done();
+          });
+        })
+    
+        it('message contains : book successfully deleted',  (done) =>{
+            chai.request('http://localhost:8080')
+          .delete('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+          .end(function (err, res) 
+          {
+            //assert that the mocked response is returned
+            expect(res.body.message).to.equal('book successfully deleted');
+            done();
+          });
+        })
+    });
+    
+    describe("Requete GET", () => {
+        beforeEach(() => {
+            resetDatabase(pathBooks, books.initialStructureOneBook)
+            nock.cleanAll()
+        });
+
+
+        it('response is 200',  (done) =>{
+            chai.request('http://localhost:8080')
+          .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+          .end(function (err, res) 
+          {
+            expect(res.statusCode).to.equal(200);
+            done();
+          });
+        })
+    
+        it('message contains : book fetched',  (done) =>{
+            chai.request('http://localhost:8080')
+          .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+          .end(function (err, res) 
+          {
+            expect(res.body.message).to.equal('book fetched');
+            done();
+          });
+        })
+    
+        it('Get is an Object',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {
+                    expect(res.body.book).to.be.a("object")
+        
+                    done();
+                })
+        })
+    
+        it('TItle in book is an string',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {                    
+                    expect(res.body.book.title).to.be.a("String")
+        
+                    done();
+                })
+        })
+
+        it('TItle is the same in mocked database',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {                    
+                    let titleInDatabase = res.body.book.title;
+
+                    const requestNock = nock('http://localhost:8080')
+                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                    .reply(200, {
+                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
+                    });
+                
+                    chai.request('http://localhost:8080')
+                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                    .end(function (err, res) {
+                        expect(res.body.books[0].title).to.be.equal(titleInDatabase);
+                        done();
+                    });
+                });
+ 
+        })
+    
+        it('Years in book is a number',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {
+                    expect(res).to.not.be.null;
+    
+                    expect(res.body.book.years).to.be.a("number")
+        
+                    done();
+                })
+        })
+    
+    
+        it('Years is the same in mocked database',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {                    
+                    let yearsInDatabase = res.body.book.years;
+
+                    const requestNock = nock('http://localhost:8080')
+                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                    .reply(200, {
+                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
+                    });
+                
+                    chai.request('http://localhost:8080')
+                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                    .end(function (err, res) {
+                        expect(res.body.books[0].years).to.be.equal(yearsInDatabase);
+                        done();
+                    });
+                });
+ 
+        })
+    
+
+        it('Pages in book is a number',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {
+                    expect(res).to.not.be.null;
+    
+                    expect(res.body.book.pages).to.be.a("number")
+        
+                    done();
+                })
+        })
+
+        it('Pages is the same in mocked database',  (done) =>{
+            chai.request('http://localhost:8080')
+                .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                .end(function (err, res) {                    
+                    let pagesInDatabase = res.body.book.pages;
+
+                    const requestNock = nock('http://localhost:8080')
+                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                    .reply(200, {
+                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
+                    });
+                
+                    chai.request('http://localhost:8080')
+                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
+                    .end(function (err, res) {
+                        expect(res.body.books[0].pages).to.be.equal(pagesInDatabase);
+                        done();
+                    });
+                });
+ 
+        })
+    
+    });
 });
