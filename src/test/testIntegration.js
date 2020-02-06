@@ -257,7 +257,7 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
             chai.request('http://localhost:8080')
                 .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
                 .end(function (err, res) {   
-                    expect(res.body.book.pages).to.be.equal(400);
+                    expect(res.body.book.pages).to.be.equal(401);
                     done();
 
                 });
