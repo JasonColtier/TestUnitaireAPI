@@ -260,21 +260,6 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
                     expect(res.body.book.pages).to.be.equal(400);
                     done();
 
-<<<<<<< HEAD
-                    const requestNock = nock('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .reply(200, {
-                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":404}]
-                    });
-                
-                    chai.request('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .end(function (err, res) {
-                        expect(res.body.books[0].pages).to.be.equal(pagesInDatabase);
-                        done();
-                    });
-=======
->>>>>>> master
                 });
         })
     });
