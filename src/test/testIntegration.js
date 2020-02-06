@@ -17,20 +17,19 @@ chai.use(chaiAsPromised);
 
 const pathBooks = path.join(__dirname, '../data/books.json');
 
-beforeEach(() => {
-    resetDatabase(pathBooks, books.initialStructure)
-});
+describe("testIntegration",()=>{
+    beforeEach(() => {
+        resetDatabase(pathBooks, books.initialStructure)
+        nock.cleanAll()
+    });
 
-
-
-
-describe("gcyegyu",()=>{
     it('Get is not null',  (done) =>{
         server.po
         chai.request('http://localhost:8080')
             .get('/book')
             .end(function (err, res) {
     
+                expect(res.body).to.be.a("object")
                 // chek status 
                 expect(res).to.have.status(200)
     
