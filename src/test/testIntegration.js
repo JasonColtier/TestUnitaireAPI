@@ -286,7 +286,7 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
                     const requestNock = nock('http://localhost:8080')
                     .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
                     .reply(200, {
-                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":401}]
+                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":402}]
                     });
                 
                     chai.request('http://localhost:8080')
