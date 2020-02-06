@@ -207,26 +207,14 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
                 })
         })
 
-        it('TItle is the same in mocked database',  (done) =>{
+        it('Title is the same in mocked database',  (done) =>{
             chai.request('http://localhost:8080')
                 .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                .end(function (err, res) {                    
-                    let titleInDatabase = res.body.book.title;
+                .end(function (err, res) {   
+                    expect(res.body.book.title).to.be.equal("Coco raconte Channel 2");
+                    done();
 
-                    const requestNock = nock('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .reply(200, {
-                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
-                    });
-                
-                    chai.request('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .end(function (err, res) {
-                        expect(res.body.books[0].title).to.be.equal(titleInDatabase);
-                        done();
-                    });
                 });
- 
         })
     
         it('Years in book is a number',  (done) =>{
@@ -240,29 +228,17 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
                     done();
                 })
         })
-    
-    
+
         it('Years is the same in mocked database',  (done) =>{
             chai.request('http://localhost:8080')
                 .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                .end(function (err, res) {                    
-                    let yearsInDatabase = res.body.book.years;
+                .end(function (err, res) {   
+                    expect(res.body.book.years).to.be.equal(1990);
+                    done();
 
-                    const requestNock = nock('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .reply(200, {
-                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
-                    });
-                
-                    chai.request('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .end(function (err, res) {
-                        expect(res.body.books[0].years).to.be.equal(yearsInDatabase);
-                        done();
-                    });
                 });
- 
         })
+    
     
 
         it('Pages in book is a number',  (done) =>{
@@ -280,24 +256,11 @@ describe("Test d'intégration sur base de données avec 1 livre", () => {
         it('Pages is the same in mocked database',  (done) =>{
             chai.request('http://localhost:8080')
                 .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                .end(function (err, res) {                    
-                    let pagesInDatabase = res.body.book.pages;
+                .end(function (err, res) {   
+                    expect(res.body.book.pages).to.be.equal(400);
+                    done();
 
-                    const requestNock = nock('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .reply(200, {
-                        books: [{"id":"0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9","title":"Coco raconte Channel 2","years":1990,"pages":400}]
-                    });
-                
-                    chai.request('http://localhost:8080')
-                    .get('/book/0db0b43e-dddb-47ad-9b4a-e5fe9ec7c2a9')
-                    .end(function (err, res) {
-                        expect(res.body.books[0].pages).to.be.equal(pagesInDatabase);
-                        done();
-                    });
                 });
- 
         })
-    
     });
 });
